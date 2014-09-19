@@ -1,7 +1,10 @@
 import json
+from tempfile import NamedTemporaryFile
 
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+
+from pydocx.parsers import Docx2Html
 
 from docx_to_html.forms import UploadFileForm
 
@@ -22,5 +25,11 @@ class JSONResponse(HttpResponse):
 def index(request):
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
-        return JSONResponse({})
+        with NamedTemporaryFile(mode='wrb+', suffix='.docx') as f:
+            f.write(form.cleaned_data['file'].read())
+            f.flush()
+            f.seek(0)
+            parser = Docx2Html(f.name)
+            html = parser.parsed
+        return JSONResponse({'html': html})
     return JSONResponse(form.errors, status=200)

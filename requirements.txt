@@ -1,2 +1,3 @@
 Django==1.6
 wsgiref==0.1.2
+pydocx==0.4.01
