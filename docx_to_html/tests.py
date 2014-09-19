@@ -47,8 +47,7 @@ class IndexTestCase(TestCase):
 
     def get_file_path(self, file_name):
         return os.path.join(
-            os.path.abspath('.'),
-            'docx_to_html',
+            os.path.abspath(os.path.dirname(__file__)),
             'fixtures',
             file_name,
         )
